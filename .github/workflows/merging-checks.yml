@@ -1,0 +1,40 @@
+name: Validate CloudFormation Template
+
+on:
+  workflow_call:
+    inputs:
+      trigger_job:
+        description: 'Trigger job'
+        required: true
+        type: string
+        
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout current repository
+        uses: actions/checkout@v2
+        with:
+          repository: ${{ github.repository }}
+          ref: main
+          
+      - name: Checkout single-env-deployment repository
+        uses: actions/checkout@v2
+        with:
+          repository: srikanth-1612/single-env-deployment
+          ref: main
+          path: single-env-deployment
+
+      - name: Install AWS CLI
+        run: |
+          # Install AWS CLI for cfn-lint and other AWS commands
+          sudo apt-get update
+          sudo apt-get install -y python3-pip
+          pip3 install awscli --upgrade --user
+
+      - name: Validate CloudFormation template
+        run: |
+          # Run cfn-lint to validate CloudFormation template
+          aws cloudformation validate-template --template-body file://single-env-deployment/cfn.yml
+
