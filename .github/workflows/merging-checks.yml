@@ -18,6 +18,13 @@ jobs:
         with:
           repository: ${{ github.repository }}
           ref: main
+          
+      - name: Checkout single-env-deployment repository
+        uses: actions/checkout@v2
+        with:
+          repository: srikanth-1612/single-env-deployment
+          ref: main
+          path: single-env-deployment
         
       - name: Install AWS CLI V2
         run: |
@@ -27,16 +34,11 @@ jobs:
 
       - name: Configure AWS credentials
         run: |
-          aws configure set aws_access_key_id "${{ secrets.AWS_ACCESS_KEY_ID }}"
-          aws configure set aws_secret_access_key "${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-          aws configure set region ap-southeast-1
-
-      - name: Checkout single-env-deployment repository
-        uses: actions/checkout@v2
-        with:
-          repository: srikanth-1612/single-env-deployment
-          ref: main
-          path: single-env-deployment
+          echo "[default]" > ~/.aws/credentials
+          echo "aws_access_key_id = ${{ secrets.AWS_ACCESS_KEY_ID }}" >> ~/.aws/credentials
+          echo "aws_secret_access_key = ${{ secrets.AWS_SECRET_ACCESS_KEY }}" >> ~/.aws/credentials
+          echo "[default]" > ~/.aws/config
+          echo "region = ap-southeast-1" >> ~/.aws/config
 
       - name: Validate CloudFormation template
         run: |
