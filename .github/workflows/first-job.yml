@@ -1,0 +1,48 @@
+name: Workflow to run first jenkins job
+
+on:
+  workflow_dispatch:
+    inputs:
+      Environment:
+        description: 'Specify the environment'
+        required: true
+        type: string
+        default: ''
+      stack_name:
+        description: 'Specify the stack_name'
+        required: true
+        type: string
+        default: ''
+      SWAGGER_BRANCH_TAG:
+        description: 'Specify the swagger_branch_tag'
+        required: true
+        type: string
+        default: 'master'
+      AGENT:
+        description: 'Specify the agent'
+        required: true
+        default: 'master'
+        type: choice
+        options:
+        - ecs
+        - master
+        - UI_Docker
+        - prod_node
+        - any
+
+jobs:
+  set-agent:
+    runs-on: ubuntu-latest # here you have to change as per your actual runners
+    outputs:
+      selected-agent: ${{ steps.set-agent.outputs.agent }}
+    steps:
+      - name: Set Agent
+        id: set-agent
+        run: |
+          if [[ "${{ github.event.inputs.AGENT }}" == "any" ]]; then
+            echo "agent=ubuntu-latest" >> $GITHUB_ENV
+          else
+            echo "agent=${{ github.event.inputs.AGENT }}" >> $GITHUB_ENV
+          fi  
+
+          echo "the agent is choosen: ${{ env.agent }} " 
