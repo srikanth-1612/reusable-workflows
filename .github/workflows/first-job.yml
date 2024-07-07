@@ -44,5 +44,5 @@ jobs:
           else
             echo "agent=${{ github.event.inputs.AGENT }}" >> $GITHUB_ENV
           fi  
-
-          echo "the agent is choosen: ${{ env.agent }} " 
+          echo "::set-output name=agent::$agent"
+          echo "The agent chosen: $agent" 
