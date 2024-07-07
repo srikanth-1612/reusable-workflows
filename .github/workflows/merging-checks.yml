@@ -36,5 +36,5 @@ jobs:
       - name: Validate CloudFormation template
         run: |
           # Run cfn-lint to validate CloudFormation template
-          aws cloudformation validate-template --template-body file://single-env-deployment/cfn.yml
+          aws cloudformation validate-template --template-body file://srikanth-1612/single-env-deployment/.github/workflows/cfn.yml
 
