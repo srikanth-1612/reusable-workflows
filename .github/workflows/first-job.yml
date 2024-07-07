@@ -46,3 +46,9 @@ jobs:
           fi  
           echo "::set-output name=agent::$agent"
           echo "The agent chosen: $agent" 
+  example-job:
+    needs: set-agent
+    runs-on: ${{ env.agent }}
+    steps:
+      - name: Print Agent
+        run: echo "Running on agent ${{ env.agent }}"
